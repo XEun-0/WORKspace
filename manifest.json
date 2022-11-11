@@ -28,7 +28,7 @@
   ],
 
   "sidebar_action": {
-    "default_icon": "icons/star.png",
+    "default_icon": "icons/",
     "default_title" : "WORKspace",
     "default_panel": "sidebar/panel.html"
   },

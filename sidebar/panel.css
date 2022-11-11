@@ -18,7 +18,7 @@ html, body {
   [id^="content_"] {
     height: 90%;
     margin: 2em 2em 0 2em;
-    border: .5em solid #DDE4E9;
+    border: .5em solid #a3aeb5;
     transition: background-color .2s ease-out;
   }
   
