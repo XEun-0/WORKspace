@@ -1,5 +1,6 @@
 let currentTab = null;
- 
+
+//Event Listeners
 browser.tabs.onActivated.addListener((event) => currentTab = event.tabId);
  
 setInterval(updateBrowseTime, 1000);
