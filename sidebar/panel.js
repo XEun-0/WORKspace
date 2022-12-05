@@ -12,10 +12,13 @@ const cbArray = [
 Make the content box editable as soon as the user mouses over the sidebar.
 */
 window.addEventListener("mouseover", () => {
-  cb_1.setAttribute("contenteditable", true);
-  cb_2.setAttribute("contenteditable", true);
-  cb_3.setAttribute("contenteditable", true);
-  cb_4.setAttribute("contenteditable", true);
+  for(i = 0; i < cbArray.length; i++) {
+    cbArray[i].setAttribute("contenteditable", true);
+  }
+  //cb_1.setAttribute("contenteditable", true);
+  //cb_2.setAttribute("contenteditable", true);
+  //cb_3.setAttribute("contenteditable", true);
+  //cb_4.setAttribute("contenteditable", true);
 });
 
 /*
@@ -26,30 +29,36 @@ window.addEventListener("mouseout", () => {
   cb_2.setAttribute("contenteditable", false);
   cb_3.setAttribute("contenteditable", false);
   cb_4.setAttribute("contenteditable", false);
-  browser.tabs.query({windowId: myWindowId, active: true}).then((tabs) => {
-    let contentToStore = {};
-    contentToStore[tabs[0].url] = contentBox.textContent;
-    browser.storage.local.set(contentToStore);
-  });
+  //browser.tabs.query({windowId: myWindowId, active: true}).then((tabs) => {
+  let contentToStore = {};
+  //contentToStore[tabs[0].url] = contentBox.textContent;
+  for(i = 0; i < cbArray.length; i++) {
+    let cName = cbArray[i].id;
+    let tc = cbArray[i].textContent;
+    console.log(tc);
+    contentToStore[cName] = tc;
+  }
+  console.log(contentToStore);
+  browser.storage.local.set(contentToStore);
+  //});
 });
 
 /*
 Update the sidebar's content.
-1) Get the active tab in this sidebar's window.
-2) Get its stored content.
-3) Put it in the content box.
 */
 function updateContent() {
-  browser.tabs.query({windowId: myWindowId, active: true})
-    .then((tabs) => {
-      return browser.storage.local.get(tabs[0].url);
+  for(i = 0; i < cbArray.length; i++) {
+    let component = cbArray[i];
+    let cName = component.id;
+
+    browser.storage.local.get(cName)
+    .then((text) => {
+        return text;
     })
-    .then((storedInfo) => {
-      cb_1.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_2.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_3.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_4.textContent = storedInfo[Object.keys(storedInfo)[0]];
+    .then((nameToLook) => {
+          component.textContent = nameToLook[Object.keys(nameToLook)[0]];
     });
+  }
 }
 
 /*
