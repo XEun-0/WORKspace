@@ -1,11 +1,77 @@
+class Project {
+
+    name;
+    notes = "";
+    links = [];
+
+    constructor(name) {
+        this.name = name;
+    }
+
+    addLink(link) {
+        links.push(link);
+    }
+
+    getName() {
+        return this.name;
+    }
+    setName(name) {
+        this.name = name;
+    }
+
+    getNotes() {
+        return this.notes;
+    }
+    setNotes(notes) {
+        this.notes = notes;
+    }
+}
+
 let myWindowId;
 const cb_1 = document.querySelector("#content_1");
-const cb_2 = document.querySelector("#content_2");
-const cb_3 = document.querySelector("#content_3");
-const cb_4 = document.querySelector("#content_4");
-const cbArray = [
-  cb_1, cb_2, cb_3, cb_4
-];
+//const cb_2 = document.querySelector("#content_2");
+//const cb_3 = document.querySelector("#content_3");
+//const cb_4 = document.querySelector("#content_4");
+
+const projectArray = [];
+
+
+/*
+Add Project on Click
+ */
+
+const addProject = document.querySelector("#add-project");
+const projName = document.querySelector("#proj-name");
+const dropdown = document.querySelector("#projects-list");
+const plusLink = document.querySelector("#add-link");
+
+addProject.addEventListener("click", addProj);
+plusLink.addEventListener("click", addLink);
+
+function addProj() {
+    projectArray.push(new Project(projName.value));
+    console.log(projectArray.length.toString());
+
+    /*
+    Update Dropdown
+    */
+
+    dropdown.innerHTML = "<option selected disabled>Select Project</option>";
+
+    for (i = 0; i < projectArray.length; i++) {
+        let newOpt = new Option(projectArray[i].getName(), i.toString());
+        dropdown.add(newOpt, undefined);
+    }
+}
+
+function addLink() {
+    if (projectArray.length > 0) {
+
+    } else {
+        document.querySelector("#no-links").innerHTML = "You have added no links yet! Create a project before you add links!";
+    }
+}
+
 
 
 /*
@@ -13,9 +79,9 @@ Make the content box editable as soon as the user mouses over the sidebar.
 */
 window.addEventListener("mouseover", () => {
   cb_1.setAttribute("contenteditable", true);
-  cb_2.setAttribute("contenteditable", true);
-  cb_3.setAttribute("contenteditable", true);
-  cb_4.setAttribute("contenteditable", true);
+  //cb_2.setAttribute("contenteditable", true);
+  //cb_3.setAttribute("contenteditable", true);
+  //cb_4.setAttribute("contenteditable", true);
 });
 
 /*
@@ -23,32 +89,35 @@ When the user mouses out, save the current contents of the box.
 */
 window.addEventListener("mouseout", () => {
   cb_1.setAttribute("contenteditable", false);
-  cb_2.setAttribute("contenteditable", false);
-  cb_3.setAttribute("contenteditable", false);
-  cb_4.setAttribute("contenteditable", false);
-  browser.tabs.query({windowId: myWindowId, active: true}).then((tabs) => {
-    let contentToStore = {};
-    contentToStore[tabs[0].url] = contentBox.textContent;
-    browser.storage.local.set(contentToStore);
-  });
+  //cb_2.setAttribute("contenteditable", false);
+  //cb_3.setAttribute("contenteditable", false);
+  //cb_4.setAttribute("contenteditable", false);
+  //browser.tabs.query({windowId: myWindowId, active: true}).then((tabs) => {
+  let contentToStore = {};
+  //contentToStore[tabs[0].url] = contentBox.textContent;
+    let cName = cb_1.id;
+    let tc = cb_1.textContent;
+    console.log(tc);
+    contentToStore[cName] = tc;
+
+  console.log(contentToStore);
+  browser.storage.local.set(contentToStore);
+  //});
 });
 
 /*
 Update the sidebar's content.
-1) Get the active tab in this sidebar's window.
-2) Get its stored content.
-3) Put it in the content box.
 */
 function updateContent() {
-  browser.tabs.query({windowId: myWindowId, active: true})
-    .then((tabs) => {
-      return browser.storage.local.get(tabs[0].url);
+    let component = cb_1;
+    let cName = component.id;
+
+    browser.storage.local.get(cName)
+    .then((text) => {
+        return text;
     })
-    .then((storedInfo) => {
-      cb_1.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_2.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_3.textContent = storedInfo[Object.keys(storedInfo)[0]];
-      cb_4.textContent = storedInfo[Object.keys(storedInfo)[0]];
+    .then((nameToLook) => {
+          component.textContent = nameToLook[Object.keys(nameToLook)[0]];
     });
 }
 
