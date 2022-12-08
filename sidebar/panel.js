@@ -1,15 +1,22 @@
 class Project {
-
     name;
     notes = "";
-    links = [];
+    links = {};
 
     constructor(name) {
         this.name = name;
     }
+    getLinks() {
+        return this.links;
+    }
+    addLink(title, link) {
+        this.links[title] = link;
+    }
 
-    addLink(link) {
-        links.push(link);
+    SetLinks(linksArr) {
+        for(let i = 0; i < linksArr; i++) {
+            this.links.push(linksArr[i]);
+        }
     }
 
     getName() {
@@ -28,114 +35,166 @@ class Project {
 }
 
 let myWindowId;
-const cb_1 = document.querySelector("#content_1");
-//const cb_2 = document.querySelector("#content_2");
-//const cb_3 = document.querySelector("#content_3");
-//const cb_4 = document.querySelector("#content_4");
-
+const cb_1 = document.querySelector("#content-notes");
 const projectArray = [];
-
+let currProject;
 
 /*
 Add Project on Click
  */
 
-const addProject = document.querySelector("#add-project");
+const addProject = document.querySelector("#project-add");
 const projName = document.querySelector("#proj-name");
-const dropdown = document.querySelector("#projects-list");
+const dropdown = document.querySelector("#project-list");
 const plusLink = document.querySelector("#add-link");
+const linkName = document.querySelector("#link-name");
 
 addProject.addEventListener("click", addProj);
 plusLink.addEventListener("click", addLink);
+dropdown.addEventListener("change", displayFromStorage);
 
-function addProj() {
-    projectArray.push(new Project(projName.value));
-    console.log(projectArray.length.toString());
-
-    /*
-    Update Dropdown
-    */
-
-    dropdown.innerHTML = "<option selected disabled>Select Project</option>";
-
-    for (i = 0; i < projectArray.length; i++) {
-        let newOpt = new Option(projectArray[i].getName(), i.toString());
-        dropdown.add(newOpt, undefined);
+async function addProj() {
+    if (projName.value.replace(/\s+/g, '') != "") {
+        //console.log("addProj()"); //DEBUG
+        projectArray.push(new Project(projName.value));
+        saveProjectArray();
+        await loadFromStorage();
+        projName.value = "";
     }
 }
 
-function addLink() {
+async function addLink() {
     if (projectArray.length > 0) {
-
+        document.querySelector("#no-links").innerHTML = "";
+        listOfLinks = projectArray[dropdown.selectedIndex - 1].links;
+        //console.log(projectArray[dropdown.selectedIndex].name);
+        browser.tabs.query({ currentWindow: true, active: true }).then((tabs) => {
+            let tab = tabs[0]; // Safe to assume there will only be one result
+            if(linkName.value.replace(/\s+/g, '') != "") {
+                listOfLinks[linkName.value] = tab.url;
+                document.querySelector("#link-list").innerHTML += "<div><li><a href ='" + listOfLinks[linkName.value] + "' target=\"_blank\" rel=\"noopener noreferrer\">" + linkName.value + "</a></li>";
+            }
+        }, console.error)
     } else {
         document.querySelector("#no-links").innerHTML = "You have added no links yet! Create a project before you add links!";
     }
+    
+    saveProjectArray();
+    
 }
 
+async function displayFromStorage() {
+    cb_1.textContent = projectArray[dropdown.selectedIndex - 1].notes;
+    listOfLinks = projectArray[dropdown.selectedIndex - 1].links;
+    
+    document.querySelector("#link-list").innerHTML = "";
+    
+    let keyNum = Object.keys(listOfLinks);
+    if(keyNum != 0) {
+        document.querySelector("#no-links").innerHTML = "";
+        for(let i = 0; i < keyNum.length; i++) {
+            document.querySelector("#link-list").innerHTML += "<div><li><a href ='" + listOfLinks[keyNum[i]] + "' target=\"_blank\" rel=\"noopener noreferrer\">" + keyNum[i] + "</a></li>";
+        }
+    } else {
+        document.querySelector("#no-links").innerHTML = "You have added no links yet!";
+    }
+    //document.querySelector("#link-list").innerHTML += "<div><li><a href ='" + listOfLinks[i] + "' target=\"_blank\" rel=\"noopener noreferrer\">" + keyNum + "</a></li>";
+    
+    saveProjectArray();
+}
 
+async function loadFromStorage() {
+    browser.storage.local.get("names").then((obj) => {
+        //console.log("called loadFromStorage():"); //DEBUGGING
+        let temp = obj["names"];
+        projectArray.splice(0, projectArray.length);
+        for(let i = 0; i < temp.length; i++) {
+            //console.log(temp.length); //DEBUG
+            let proj = new Project(temp[i]["name"]);
+            proj.links = temp[i]["links"];
+            proj.notes = temp[i]["notes"];
+            projectArray.push(proj);
+            //console.log("adding temp stuff"); //DEBUG
+            //console.log(projectArray); //DEBUG
+        }
+        updateDropDown();
+    }).catch((e) => {
+        console.error(e.message);
+    });
+}
+
+function saveProjectArray() {
+    
+    console.log(projectArray);
+    let listOfNames = {};
+    listOfNames["names"] = projectArray;
+    browser.storage.local.set(listOfNames);
+}
+
+async function updateDropDown() {
+    console.log("called updateDropDown(): ");
+    console.log(projectArray);
+    dropdown.innerHTML = "<option selected disabled>Select Project</option>";
+    for (let i = 0; i < projectArray.length; i++) {
+        let newOpt = new Option(projectArray[i].name, i.toString());
+        dropdown.add(newOpt, undefined);
+    }
+}
 
 /*
 Make the content box editable as soon as the user mouses over the sidebar.
 */
 window.addEventListener("mouseover", () => {
   cb_1.setAttribute("contenteditable", true);
-  //cb_2.setAttribute("contenteditable", true);
-  //cb_3.setAttribute("contenteditable", true);
-  //cb_4.setAttribute("contenteditable", true);
+  projectArray[dropdown.selectedIndex - 1].notes = cb_1.textContent;
 });
 
 /*
 When the user mouses out, save the current contents of the box.
 */
 window.addEventListener("mouseout", () => {
-  cb_1.setAttribute("contenteditable", false);
-  //cb_2.setAttribute("contenteditable", false);
-  //cb_3.setAttribute("contenteditable", false);
-  //cb_4.setAttribute("contenteditable", false);
-  //browser.tabs.query({windowId: myWindowId, active: true}).then((tabs) => {
-  let contentToStore = {};
-  //contentToStore[tabs[0].url] = contentBox.textContent;
-    let cName = cb_1.id;
-    let tc = cb_1.textContent;
-    console.log(tc);
-    contentToStore[cName] = tc;
+    cb_1.setAttribute("contenteditable", false);
 
-  console.log(contentToStore);
-  browser.storage.local.set(contentToStore);
-  //});
+    if (projectArray > 0) {
+        let nNotes = projectArray[dropdown.selectedIndex - 1].notes;
+        nNotes = cb_1.textContent;
+    }
+
+    projectArray[dropdown.selectedIndex - 1].notes = cb_1.textContent;
 });
 
 /*
 Update the sidebar's content.
 */
-function updateContent() {
+/*function updateContent() {
     let component = cb_1;
     let cName = component.id;
 
-    browser.storage.local.get(cName)
-    .then((text) => {
-        return text;
-    })
-    .then((nameToLook) => {
+    browser.storage.local.get(cName).then((nameToLook) => {
           component.textContent = nameToLook[Object.keys(nameToLook)[0]];
     });
-}
 
+    //updateDropDown();
+}*/
+
+window.addEventListener("load", async (event) => {
+    //console.log("page loaded"); //DEBUG
+    await loadFromStorage();
+})
 /*
 Update content when a new tab becomes active.
 */
-browser.tabs.onActivated.addListener(updateContent);
+//browser.tabs.onActivated.addListener(updateContent);
 
 /*
 Update content when a new page is loaded into a tab.
 */
-browser.tabs.onUpdated.addListener(updateContent);
+//browser.tabs.onUpdated.addListener(updateContent);
 
 /*
 When the sidebar loads, get the ID of its window,
 and update its content.
 */
-browser.windows.getCurrent({populate: true}).then((windowInfo) => {
-  myWindowId = windowInfo.id;
-  updateContent();
+browser.windows.getCurrent({populate: true}).then(async () => {
+    await loadFromStorage();
 });

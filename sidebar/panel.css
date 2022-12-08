@@ -1,86 +1,109 @@
 html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    height: 90%;
-    font: caption;
-    background-color: #7d7d7d;
-  }
-  
-  p {
-    margin: 1em 2em;
-  }
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 90%;
+  font: caption;
+  background-color: #7d7d7d;
+}
+
+p {
+  margin: 1em 2em;
+}
+
+.sections {
+  margin: 2px 0px 0px 2px;
+}
+
+.mar-3-lr {
+  margin: 0px 3px 0px 3px; 
+}
 
 #header-text {
-    margin: 2px 2px;
-    padding: 10px;
+  margin: 2px 2px 2px 2px;
+  padding: 5px 0px 5px 0px;
+  /*background: yellow;*/
+  text-align: left;
 }
 
+/*START link stuff*/
 #add-link {
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    width: 35%;
-    margin: 2px 2px;
-    border-radius: 5%;
-    transition: background-color .2s ease-out;
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 35%;
+  margin: 2px 2px;
+  border-radius: 5%;
+  transition: background-color .2s ease-out;
 }
-    #add-link:hover {
-        background-color: darkgreen;
-        transition: background-color .2s ease-in;
-    }
 
-#add-project {
-    background-color: #04AA6D;
-    border: none;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    width: 30%;
-    margin: 2px 2px;
-    border-radius: 5%;
-    transition: background-color .2s ease-out;
+#add-link:hover {
+  background-color: darkgreen;
+  transition: background-color .2s ease-in;
+}
+
+#link-name {
+  margin: 2px 2px;
+  padding: 3px;
+  float: right;
+  width: 60%;
+}
+/*END link stuff*/
+
+/*project stuff*/
+#project-add {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 20%;
+  margin: 0px 0px;
+  border-radius: 5%;
+  transition: background-color .2s ease-out;
 }
 #proj-name {
-    margin: 2px 2px;
-    padding: 10px;
-    float:right;
-    width: 65%;
+  margin: 1px 1px 1px 1px;
+  padding: 3px;
+  float:right;
+  width: 75%;
 }
 
-#add-project:hover {
-    background-color: darkgreen;
-    transition: background-color .2s ease-in;
+#project-add:hover {
+  background-color: darkgreen;
+  transition: background-color .2s ease-in;
 }
-  
-  [id^="content_"] {
-    background: rgb(0, 205, 255);
-    width: auto;
-    height: 20%;
-    word-wrap: break-word;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    resize: none;
-    margin: 2em 2em 0 2em;
-    border: .5em solid #a3aeb5;
-    transition: background-color .2s ease-out;
-  }
-  
-  [id^="content_"][contenteditable=true] {
-    background-color: white;
-    transition: background-color .2s ease-in;
-  }
-  
-  [contenteditable]:focus {
-    outline: 0px solid transparent;
-  }
+/*end project stuff*/
+
+[id^="content-"] {
+  background: rgb(0, 205, 255);
+  width: auto;
+  height: 20%;
+  margin: 0px 3px 0px 3px;
+  word-wrap: break-word;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  resize: none;
+  /*margin: 2em 2em 0 2em;*/
+  border: .3px solid #a3aeb5;
+  transition: background-color .2s ease-out;
+}
+
+[id^="content-"][contenteditable=true] {
+  background-color: white;
+  transition: background-color .2s ease-in;
+}
+
+[contenteditable]:focus {
+  outline: 0px solid transparent;
+}
