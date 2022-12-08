@@ -8,7 +8,7 @@ setInterval(updateBrowseTime, 1000);
 async function updateBrowseTime() {
   if (!currentTab)
     return;
- 
+    
   let frames = null;
   try {
     frames = await browser.webNavigation.getAllFrames({ 'tabId': currentTab});

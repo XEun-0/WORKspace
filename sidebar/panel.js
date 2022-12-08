@@ -145,6 +145,7 @@ async function updateDropDown() {
 Make the content box editable as soon as the user mouses over the sidebar.
 */
 window.addEventListener("mouseover", () => {
+
   cb_1.setAttribute("contenteditable", true);
   projectArray[dropdown.selectedIndex - 1].notes = cb_1.textContent;
 });
@@ -153,6 +154,7 @@ window.addEventListener("mouseover", () => {
 When the user mouses out, save the current contents of the box.
 */
 window.addEventListener("mouseout", () => {
+
     cb_1.setAttribute("contenteditable", false);
 
     if (projectArray > 0) {
@@ -166,6 +168,7 @@ window.addEventListener("mouseout", () => {
 /*
 Update the sidebar's content.
 */
+
 /*function updateContent() {
     let component = cb_1;
     let cName = component.id;
@@ -173,9 +176,6 @@ Update the sidebar's content.
     browser.storage.local.get(cName).then((nameToLook) => {
           component.textContent = nameToLook[Object.keys(nameToLook)[0]];
     });
-
-    //updateDropDown();
-}*/
 
 window.addEventListener("load", async (event) => {
     //console.log("page loaded"); //DEBUG
