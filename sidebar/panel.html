@@ -1,17 +1,40 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="panel.css"/>
+    
   </head>
 
-<body>
-  <div id = "content_1"></div>
-  <div id = "content_2"></div>
-  <div id = "content_3"></div>
-  <div id = "content_4"></div>
-  <script src="panel.js"></script>
-</body>
+  <body>
+      <select name="projects-list" id="project-list">
+          <option selected disabled>Select Project</option>
+      </select>
 
+      <div class="sections">
+          <button onclick="addProj()" id="project-add">+</button>
+          <input type="text" id="proj-name" name="proj-name" />
+      </div>
+
+      <h2 id="header-text">Notes: </h2>
+
+      <div class="mar-3-lr" id="content-notes"></div>
+
+      <h2 id="header-text">Relevant Links: </h2>
+
+      <div class="mar-3-lr" id="no-links">You have added no links yet!</div>
+        
+      <div>
+          <ul id="link-list">
+
+          </ul>
+      </div>
+
+      <div class="sections">
+        <button onclick="addLink()" id="add-link">Add Link</button>
+        <input type="text" id="link-name" name="link-name" />
+      </div>
+      <script type="text/javascript" src="panel.js"></script>
+  </body>
 </html>
